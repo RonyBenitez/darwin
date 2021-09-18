@@ -19,6 +19,7 @@ import joblib
 PRETRAINED_MODEL="./modelsave/best_model.pth"
 INDEXING_PATH="../input/indexing/*.jpg"
 OUTPUT_PATH="artefacts"
+sep="/"
 def load_model():
     model=GoogLeNet()
     model.load_state_dict(torch.load(PRETRAINED_MODEL))
@@ -46,7 +47,7 @@ class DogIndexingDataset(Dataset):
 
 def gen_index_labels():
     indexed_files=glob(INDEXING_PATH)
-    label_index=[t.split("\\")[-1].split(".")[0] for t in indexed_files]
+    label_index=[t.split(sep)[-1].split(".")[0] for t in indexed_files]
     le=LabelEncoder()
     label_=le.fit_transform(label_index)
     return indexed_files,label_index,le,label_
