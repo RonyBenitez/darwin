@@ -3,6 +3,11 @@ import torch.nn as nn
 import torch.functional as F
 
 
+class Flatten(nn.Module):
+    def forward(self, input):
+        return input.view(input.size(0), -1)
+
+
 class conv_block(nn.Module):
     def __init__(self, in_channels, out_channels, **kwargs):
         super(conv_block, self).__init__()
@@ -64,7 +69,7 @@ class GoogLeNet(nn.Module):
         self.maxpool3 = nn.MaxPool2d(kernel_size=(3, 3), stride=2, padding=1)
         
         self.avgpool = nn.AvgPool2d(kernel_size=3,stride=1)
-        self.flat = nn.Flatten()
+        self.flat = Flatten()
         self.dense = nn.Linear(69120,128)
 
         # self.inception4a = Inception_block(480, 192, 96, 208, 16, 48, 64)

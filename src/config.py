@@ -5,7 +5,7 @@ BATCH_SIZE=20
 
 IMAGE_SIZE=(224,224)
 
-IMG_PATH="../../input/after_4_bis/*/*.jpg"
+IMG_PATH="../input/after_4_bis/*/*.jpg"
 EMBED_IMG_PATH="../../input/reference_images/*.jpg"
 LOG_DIR="logdir_train"
 

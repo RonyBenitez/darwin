@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
 import os
-from torch.utils.tensorboard import SummaryWriter
 import tensorflow as tf
 import tensorboard as tb
 tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
@@ -27,15 +26,16 @@ model=GoogLeNet().to(config.DEVICE)
 
 from dataset import DogDatasetNaive,get_tensors,embedDataset,DogDatasetHard
 
-
+sep="/"
 
 
 def load_df():
     paths=glob(config.IMG_PATH)
-    labels=[path.split("\\")[-1][:-4].split(".")[0] for path in paths]
-    file_name=[path.split("\\")[-1][:-4].split(".")[1] for path in paths]
+    labels=[path.split(sep)[-1][:-4].split(".")[0] for path in paths]
+    print("label",labels)
+    file_name=[path.split(sep)[-1][:-4].split(".")[1] for path in paths]
     df=pd.DataFrame({"img_paths":paths,"labels":labels,"file_name":file_name})
-    df["img_paths"]=df["img_paths"].apply(lambda x: x.replace("\\","/"))
+    df["img_paths"]=df["img_paths"].apply(lambda x: x.replace(sep,"/"))
     return df#.head(500)
 
 
@@ -44,9 +44,9 @@ def load_df():
 if __name__ == "__main__":
     os.makedirs(config.MODEL_SAVEPATH,exist_ok=True)
     os.makedirs(config.LOG_DIR,exist_ok=True)
-    writer = SummaryWriter(config.LOG_DIR)
     
     df=load_df()
+    df.to_csv("./data.csv")
     val_labels=np.random.choice(df["labels"].unique(),int(0.3*df["labels"].nunique()))
     val_df=df[df["labels"].isin(val_labels)]
     df=df.loc[df.labels.isin(val_df.labels)==False]
@@ -83,13 +83,10 @@ if __name__ == "__main__":
         print(f"TRAINING STEP: {epoch} LOSS: {val_loss}")
 
 
-        writer.add_scalar("Loss/train", train_loss, epoch)
-        writer.add_scalar("Loss/val", val_loss, epoch)
+
 
 
         if val_loss<best_loss:
             best_loss=val_loss
             print("Saving Best Model ",epoch)
             torch.save(model.state_dict(),os.path.join(config.MODEL_SAVEPATH,"best_model.pth"))
-    writer.flush()
-    writer.close()

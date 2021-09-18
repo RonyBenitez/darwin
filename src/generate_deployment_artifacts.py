@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
 import os
-from model import GoogLeNet
+from models import GoogLeNet
 
 from loss_fn import TripletLoss
 from sklearn.preprocessing import LabelEncoder
