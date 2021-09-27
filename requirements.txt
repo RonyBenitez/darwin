@@ -1,2 +1,10 @@
 flask
 scikit-learn
+torch
+tensorflow
+matplotlib
+numpy
+tqdm
+pandas
+scikit-image
+

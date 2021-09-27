@@ -3,4 +3,5 @@
 *.pyc
 /__pycache__
 /logdir_train
+# DogFaceNet
 # /model_train
