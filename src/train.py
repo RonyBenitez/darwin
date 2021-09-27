@@ -16,6 +16,7 @@ from models import GoogLeNet
 import loss_fn
 import config
 import engine
+print(">>GPU ",torch.cuda.is_available())
 
 ##global definitions##
 global model
@@ -32,7 +33,6 @@ sep="/"
 def load_df():
     paths=glob(config.IMG_PATH)
     labels=[path.split(sep)[-1][:-4].split(".")[0] for path in paths]
-    print("label",labels)
     file_name=[path.split(sep)[-1][:-4].split(".")[1] for path in paths]
     df=pd.DataFrame({"img_paths":paths,"labels":labels,"file_name":file_name})
     df["img_paths"]=df["img_paths"].apply(lambda x: x.replace(sep,"/"))
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                         shuffle=False, num_workers=0 )  
 
     
-    optimizer=torch.optim.Adam(model.parameters(),lr=1e-4)
+    optimizer=torch.optim.Adam(model.parameters(),lr=config.LR)
     criterion=loss_fn.TripletLoss().to(config.DEVICE)
     E=engine.Engine(criterion=criterion,optimizer=optimizer,device=config.DEVICE)
 
