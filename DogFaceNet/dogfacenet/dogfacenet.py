@@ -32,14 +32,14 @@ PATH_MODEL  = '../output/model/2019.07.29/'             # Path to the directory 
 SIZE        = (224,224,3)                               # Size of the input images
 TEST_SPLIT  = 0.1                                       # Train/test ratio
 
-LOAD_NET    = False                                     # Load a network from a saved model? If True NET_NAME and START_EPOCH have to be precised
+LOAD_NET    = True                                     # Load a network from a saved model? If True NET_NAME and START_EPOCH have to be precised
 NET_NAME    = '2019.07.29.dogfacenet'                   # Network saved name
-START_EPOCH = 0                                         # Start the training at a specified epoch
+START_EPOCH = 60                                         # Start the training at a specified epoch
 NBOF_EPOCHS = 250                                       # Number of epoch to train the network
 HIGH_LEVEL  = True                                      # Use high level training ('fit' keras method)
 STEPS_PER_EPOCH = 300                                   # Number of steps per epoch
 VALIDATION_STEPS = 30                                   # Number of steps per validation
-
+SAVE_TIME=15
 #----------------------------------------------------------------------------
 # Import the dataset.
 
@@ -221,7 +221,8 @@ if HIGH_LEVEL:
         crt_acc = histories[-1].history['triplet_acc'][0]
 
         # Save model
-        model.save('{:s}{:s}.{:d}.h5'.format(PATH_MODEL,NET_NAME,i))
+        if(i%SAVE_TIME==0):
+            model.save('{:s}{:s}.{:d}.h5'.format(PATH_MODEL,NET_NAME,i))
         
         # Save history
         loss = np.empty(0)
@@ -236,7 +237,8 @@ if HIGH_LEVEL:
             val_acc = np.append(val_acc,history.history['val_triplet_acc'])
 
         history_ = np.array([loss,val_loss,acc,val_acc])
-        np.save('{:s}{:s}.{:d}.npy'.format(PATH_SAVE,NET_NAME,i),history_)
+        if(i%SAVE_TIME==0):
+            np.save('{:s}{:s}.{:d}.npy'.format(PATH_SAVE,NET_NAME,i),history_)
 
 else:
     """
